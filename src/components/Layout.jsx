@@ -69,10 +69,10 @@ const Layout = ({ user }) => {
                 <button onClick={toggleMobileMenu} className="btn-icon">
                     <Menu size={24} />
                 </button>
-                <div className="mobile-logo">
+                <NavLink to="/" className="mobile-logo" onClick={closeMobileMenu}>
                     <Wallet size={24} color="var(--accent-primary)" />
-                    <span className="logo-text gradient-text">FinFlow</span>
-                </div>
+                    <span className="logo-text gradient-text">FinFlow v2</span>
+                </NavLink>
                 <div style={{ width: '40px' }}></div> {/* Spacer */}
             </div>
 
