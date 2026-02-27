@@ -21,18 +21,7 @@ import TransactionModal from './TransactionModal';
 const Layout = ({ user }) => {
     const [isSyncing, setIsSyncing] = React.useState(false);
     const [isTransModalOpen, setIsTransModalOpen] = React.useState(false);
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
-        return localStorage.getItem('sidebarCollapsed') === 'true';
-    });
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
-    const toggleSidebar = () => {
-        setIsSidebarCollapsed(prev => {
-            const newState = !prev;
-            localStorage.setItem('sidebarCollapsed', newState);
-            return newState;
-        });
-    };
 
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
     const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -79,86 +68,74 @@ const Layout = ({ user }) => {
             {/* Backdrop Overlay */}
             {isMobileMenuOpen && <div className="mobile-overlay" onClick={closeMobileMenu}></div>}
 
-            <aside className={`sidebar glass-panel ${isSidebarCollapsed ? 'collapsed' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div className="sidebar-toggle-btn" style={{ position: 'absolute', right: '-15px', top: '25px', zIndex: 100 }}>
-                    <button
-                        onClick={toggleSidebar}
-                        className="btn-icon"
-                        style={{ width: '30px', height: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
-                    >
-                        {isSidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-                    </button>
-                </div>
-
+            <aside className={`sidebar glass-panel ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                 <div className="logo-container">
                     <div className="logo-icon">
                         <Wallet size={24} color="var(--accent-primary)" />
                     </div>
-                    {!isSidebarCollapsed && <h1 className="logo-text gradient-text">FinFlow</h1>}
+                    <h1 className="logo-text gradient-text">FinFlow</h1>
                 </div>
 
-                {!isSidebarCollapsed && (
-                    <div style={{ padding: '0 1.5rem 1rem', borderBottom: '1px solid var(--glass-border)', marginBottom: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                            <div style={{
-                                width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem'
-                            }}>
-                                {user?.email?.[0].toUpperCase()}
-                            </div>
-                            <div style={{ overflow: 'hidden' }}>
-                                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {user?.email}
-                                </div>
-                                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Cloud Synced</div>
-                            </div>
+                <div style={{ padding: '0 1.5rem 1rem', borderBottom: '1px solid var(--glass-border)', marginBottom: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                        <div style={{
+                            width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem'
+                        }}>
+                            {user?.email?.[0].toUpperCase()}
                         </div>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <button onClick={handleSync} disabled={isSyncing} className="btn-icon" style={{ width: '100%', borderRadius: '4px', height: '32px', fontSize: '0.75rem', gap: '0.25rem' }}>
-                                <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} /> {isSyncing ? 'Đang bộ...' : 'Đồng bộ'}
-                            </button>
-                            <button onClick={handleLogout} className="btn-icon" style={{ borderRadius: '4px', height: '32px', color: 'var(--status-danger)' }}>
-                                <LogOut size={14} />
-                            </button>
+                        <div style={{ overflow: 'hidden' }}>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {user?.email}
+                            </div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Cloud Synced</div>
                         </div>
                     </div>
-                )}
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button onClick={handleSync} disabled={isSyncing} className="btn-icon" style={{ width: '100%', borderRadius: '4px', height: '32px', fontSize: '0.75rem', gap: '0.25rem' }}>
+                            <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} /> {isSyncing ? 'Đang bộ...' : 'Đồng bộ'}
+                        </button>
+                        <button onClick={handleLogout} className="btn-icon" style={{ borderRadius: '4px', height: '32px', color: 'var(--status-danger)' }}>
+                            <LogOut size={14} />
+                        </button>
+                    </div>
+                </div>
 
                 <nav className="nav-menu">
                     <NavLink to="/" onClick={closeMobileMenu} title="Dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} end>
                         <Home size={20} />
-                        {!isSidebarCollapsed && <span>Dashboard</span>}
+                        <span>Dashboard</span>
                     </NavLink>
                     <NavLink to="/transactions" onClick={closeMobileMenu} title="Giao dịch" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <CreditCard size={20} />
-                        {!isSidebarCollapsed && <span>Giao dịch</span>}
+                        <span>Giao dịch</span>
                     </NavLink>
                     <NavLink to="/wallets" onClick={closeMobileMenu} title="Tài khoản/Ví" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Wallet size={20} />
-                        {!isSidebarCollapsed && <span>Tài khoản/Ví</span>}
+                        <span>Tài khoản/Ví</span>
                     </NavLink>
                     <NavLink to="/budgets" onClick={closeMobileMenu} title="Ngân sách" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <PieChart size={20} />
-                        {!isSidebarCollapsed && <span>Ngân sách</span>}
+                        <span>Ngân sách</span>
                     </NavLink>
                     <NavLink to="/goals" onClick={closeMobileMenu} title="Mục tiêu" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Target size={20} />
-                        {!isSidebarCollapsed && <span>Mục tiêu</span>}
+                        <span>Mục tiêu</span>
                     </NavLink>
                     <NavLink to="/debts" onClick={closeMobileMenu} title="Quản lý Nợ" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <TrendingDown size={20} />
-                        {!isSidebarCollapsed && <span>Quản lý Nợ</span>}
+                        <span>Quản lý Nợ</span>
                     </NavLink>
                     <NavLink to="/reports" onClick={closeMobileMenu} title="Báo cáo" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <FileText size={20} />
-                        {!isSidebarCollapsed && <span>Báo cáo</span>}
+                        <span>Báo cáo</span>
                     </NavLink>
                 </nav>
 
                 <div className="sidebar-footer">
                     <NavLink to="/settings" onClick={closeMobileMenu} title="Cài đặt" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <SettingsIcon size={20} />
-                        {!isSidebarCollapsed && <span>Cài đặt</span>}
+                        <span>Cài đặt</span>
                     </NavLink>
                 </div>
             </aside>
