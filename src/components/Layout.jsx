@@ -24,6 +24,7 @@ const Layout = ({ user }) => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
         return localStorage.getItem('sidebarCollapsed') === 'true';
     });
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
     const toggleSidebar = () => {
         setIsSidebarCollapsed(prev => {
@@ -32,6 +33,9 @@ const Layout = ({ user }) => {
             return newState;
         });
     };
+
+    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -60,7 +64,22 @@ const Layout = ({ user }) => {
 
     return (
         <div className="app-container">
-            <aside className={`sidebar glass-panel ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+            {/* Mobile Header */}
+            <div className="mobile-header">
+                <button onClick={toggleMobileMenu} className="btn-icon">
+                    <Menu size={24} />
+                </button>
+                <div className="mobile-logo">
+                    <Wallet size={24} color="var(--accent-primary)" />
+                    <span className="logo-text gradient-text">FinFlow</span>
+                </div>
+                <div style={{ width: '40px' }}></div> {/* Spacer */}
+            </div>
+
+            {/* Backdrop Overlay */}
+            {isMobileMenuOpen && <div className="mobile-overlay" onClick={closeMobileMenu}></div>}
+
+            <aside className={`sidebar glass-panel ${isSidebarCollapsed ? 'collapsed' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                 <div style={{ position: 'absolute', right: '-15px', top: '25px', zIndex: 100 }}>
                     <button
                         onClick={toggleSidebar}
@@ -106,38 +125,38 @@ const Layout = ({ user }) => {
                 )}
 
                 <nav className="nav-menu">
-                    <NavLink to="/" title="Dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} end>
+                    <NavLink to="/" onClick={closeMobileMenu} title="Dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} end>
                         <Home size={20} />
                         {!isSidebarCollapsed && <span>Dashboard</span>}
                     </NavLink>
-                    <NavLink to="/transactions" title="Giao dịch" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/transactions" onClick={closeMobileMenu} title="Giao dịch" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <CreditCard size={20} />
                         {!isSidebarCollapsed && <span>Giao dịch</span>}
                     </NavLink>
-                    <NavLink to="/wallets" title="Tài khoản/Ví" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/wallets" onClick={closeMobileMenu} title="Tài khoản/Ví" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Wallet size={20} />
                         {!isSidebarCollapsed && <span>Tài khoản/Ví</span>}
                     </NavLink>
-                    <NavLink to="/budgets" title="Ngân sách" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/budgets" onClick={closeMobileMenu} title="Ngân sách" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <PieChart size={20} />
                         {!isSidebarCollapsed && <span>Ngân sách</span>}
                     </NavLink>
-                    <NavLink to="/goals" title="Mục tiêu" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/goals" onClick={closeMobileMenu} title="Mục tiêu" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Target size={20} />
                         {!isSidebarCollapsed && <span>Mục tiêu</span>}
                     </NavLink>
-                    <NavLink to="/debts" title="Quản lý Nợ" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/debts" onClick={closeMobileMenu} title="Quản lý Nợ" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <TrendingDown size={20} />
                         {!isSidebarCollapsed && <span>Quản lý Nợ</span>}
                     </NavLink>
-                    <NavLink to="/reports" title="Báo cáo" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/reports" onClick={closeMobileMenu} title="Báo cáo" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <FileText size={20} />
                         {!isSidebarCollapsed && <span>Báo cáo</span>}
                     </NavLink>
                 </nav>
 
                 <div className="sidebar-footer">
-                    <NavLink to="/settings" title="Cài đặt" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/settings" onClick={closeMobileMenu} title="Cài đặt" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <SettingsIcon size={20} />
                         {!isSidebarCollapsed && <span>Cài đặt</span>}
                     </NavLink>
