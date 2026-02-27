@@ -60,7 +60,7 @@ const Layout = ({ user }) => {
                 </button>
                 <NavLink to="/" className="mobile-logo" onClick={closeMobileMenu}>
                     <Wallet size={24} color="var(--accent-primary)" />
-                    <span className="logo-text gradient-text">FinFlow v2</span>
+                    <span className="logo-text gradient-text">FinFlow v3</span>
                 </NavLink>
                 <div style={{ width: '40px' }}></div> {/* Spacer */}
             </div>

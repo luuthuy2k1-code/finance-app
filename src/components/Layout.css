@@ -3,16 +3,18 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    position: relative;
 }
 
-/* Sidebar - Unified Drawer for all screens */
+/* Sidebar - Global Drawer for ALL devices */
 .sidebar {
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
     width: 280px;
-    z-index: 1200;
+    z-index: 2000;
+    /* Higher than header */
     background: var(--bg-secondary);
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -23,7 +25,7 @@
 }
 
 .sidebar.mobile-open {
-    transform: translateX(0);
+    transform: translateX(0) !important;
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -99,25 +101,28 @@
     padding-top: 1rem;
 }
 
+/* Global Content Layout */
 .main-content {
     flex: 1;
     overflow-y: auto;
-    padding: 5rem 1rem 6rem;
-    /* Space for global header and bottom nav */
+    padding: 6rem 1rem 6rem;
+    /* Top padding for global header, bottom for FAB/Nav */
     background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 40%),
         radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.05), transparent 40%);
+    transition: padding 0.3s ease;
 }
 
 @media (min-width: 1025px) {
     .main-content {
         padding: 6rem 3rem 3rem;
-        /* Adjusted for desktop */
+        /* Adjusted for desktop (no bottom nav usually) */
     }
 }
 
 /* Global Header - Unified */
 .mobile-header {
-    display: flex;
+    display: flex !important;
+    /* Force visible on all screen sizes */
     position: fixed;
     top: 0;
     left: 0;
@@ -139,7 +144,6 @@
     gap: 0.5rem;
 }
 
-.overlay,
 .mobile-overlay {
     position: fixed;
     top: 0;
@@ -148,9 +152,11 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
-    z-index: 1100;
+    z-index: 1500;
+    /* Between header and sidebar */
 }
 
+/* Bottom Navigation (Mobile Only) */
 .mobile-nav {
     display: block;
     position: fixed;
@@ -170,7 +176,7 @@
 @media (min-width: 1025px) {
     .mobile-nav {
         display: none;
-        /* Hide bottom nav on desktop */
+        /* Hide bottom navigation on large screens */
     }
 }
 
@@ -201,6 +207,7 @@
     background: rgba(99, 102, 241, 0.08);
 }
 
+/* Floating Action Button */
 .fab {
     display: flex;
     position: fixed;
@@ -222,7 +229,6 @@
 @media (min-width: 1025px) {
     .fab {
         bottom: 30px;
-        /* Adjust FAB position for desktop since no bottom nav */
     }
 }
 
@@ -230,7 +236,10 @@
     transform: scale(0.9) rotate(45deg);
 }
 
-/* Page titles and layout consistency */
+/* Desktop Logic - Remove overrides that force sidebar visible */
+/* We no longer have a @media block that sets position: relative on .sidebar */
+
+/* Responsive adjustments for headings and grids */
 .page-header {
     margin-bottom: 2rem;
     display: flex;
@@ -242,7 +251,7 @@
     .page-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 1.25rem;
     }
 }
 
