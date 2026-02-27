@@ -171,7 +171,7 @@ const Dashboard = () => {
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div className="grid-3" style={{ marginBottom: '2rem' }}>
                 <div className="card glass-panel" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05))', position: 'relative' }}>
                     <div className="flex-between">
                         <div>
@@ -231,7 +231,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+            <div className="dashboard-grid-bottom">
                 <div className="card glass-panel" style={{ minHeight: '350px' }}>
                     <div className="flex-between" style={{ marginBottom: '1.5rem' }}>
                         <h3 style={{ margin: 0 }}>Giao dịch gần đây</h3>

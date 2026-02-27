@@ -15,9 +15,11 @@ import {
 import './Layout.css';
 import { supabase } from '../supabaseClient';
 import { syncFromCloud } from '../db';
+import TransactionModal from './TransactionModal';
 
 const Layout = ({ user }) => {
     const [isSyncing, setIsSyncing] = React.useState(false);
+    const [isTransModalOpen, setIsTransModalOpen] = React.useState(false);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -121,6 +123,47 @@ const Layout = ({ user }) => {
             <main className="main-content">
                 <Outlet />
             </main>
+
+            {/* Mobile Navigation Bar */}
+            <nav className="mobile-nav">
+                <div className="mobile-nav-content">
+                    <NavLink to="/" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`} end>
+                        <Home size={24} />
+                        <span>Tổng quan</span>
+                    </NavLink>
+                    <NavLink to="/transactions" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                        <CreditCard size={24} />
+                        <span>Giao dịch</span>
+                    </NavLink>
+                    <div style={{ width: '60px' }}></div> {/* Spacer for FAB */}
+                    <NavLink to="/wallets" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                        <Wallet size={24} />
+                        <span>Ví</span>
+                    </NavLink>
+                    <NavLink to="/reports" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                        <FileText size={24} />
+                        <span>Báo cáo</span>
+                    </NavLink>
+                </div>
+            </nav>
+
+            {/* Global Floating Action Button */}
+            <button className="fab" onClick={() => setIsTransModalOpen(true)}>
+                <RefreshCw size={32} style={{ transform: 'rotate(45deg)' }} />
+            </button>
+
+            {/* Global Transaction Modal */}
+            {isTransModalOpen && (
+                <TransactionModal
+                    isOpen={isTransModalOpen}
+                    onClose={() => setIsTransModalOpen(false)}
+                    onSuccess={() => {
+                        setIsTransModalOpen(false);
+                        // Optional: trigger a refresh if needed, but db hooks usually handle it
+                        window.location.reload();
+                    }}
+                />
+            )}
         </div>
     );
 };
