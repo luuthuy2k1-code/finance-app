@@ -80,7 +80,7 @@ const Layout = ({ user }) => {
             {isMobileMenuOpen && <div className="mobile-overlay" onClick={closeMobileMenu}></div>}
 
             <aside className={`sidebar glass-panel ${isSidebarCollapsed ? 'collapsed' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <div style={{ position: 'absolute', right: '-15px', top: '25px', zIndex: 100 }}>
+                <div className="sidebar-toggle-btn" style={{ position: 'absolute', right: '-15px', top: '25px', zIndex: 100 }}>
                     <button
                         onClick={toggleSidebar}
                         className="btn-icon"
