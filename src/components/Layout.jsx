@@ -8,9 +8,10 @@ import {
     Target,
     FileText,
     Settings as SettingsIcon,
-    TrendingDown,
-    LogOut,
-    RefreshCw
+    RefreshCw,
+    ChevronLeft,
+    ChevronRight,
+    Menu
 } from 'lucide-react';
 import './Layout.css';
 import { supabase } from '../supabaseClient';
@@ -20,6 +21,17 @@ import TransactionModal from './TransactionModal';
 const Layout = ({ user }) => {
     const [isSyncing, setIsSyncing] = React.useState(false);
     const [isTransModalOpen, setIsTransModalOpen] = React.useState(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(() => {
+        return localStorage.getItem('sidebarCollapsed') === 'true';
+    });
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(prev => {
+            const newState = !prev;
+            localStorage.setItem('sidebarCollapsed', newState);
+            return newState;
+        });
+    };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -48,74 +60,86 @@ const Layout = ({ user }) => {
 
     return (
         <div className="app-container">
-            <aside className="sidebar glass-panel">
+            <aside className={`sidebar glass-panel ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <div style={{ position: 'absolute', right: '-15px', top: '25px', zIndex: 100 }}>
+                    <button
+                        onClick={toggleSidebar}
+                        className="btn-icon"
+                        style={{ width: '30px', height: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
+                    >
+                        {isSidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+                    </button>
+                </div>
+
                 <div className="logo-container">
                     <div className="logo-icon">
                         <Wallet size={24} color="var(--accent-primary)" />
                     </div>
-                    <h1 className="logo-text gradient-text">FinFlow</h1>
+                    {!isSidebarCollapsed && <h1 className="logo-text gradient-text">FinFlow</h1>}
                 </div>
 
-                <div style={{ padding: '0 1.5rem 1rem', borderBottom: '1px solid var(--glass-border)', marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                        <div style={{
-                            width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem'
-                        }}>
-                            {user?.email?.[0].toUpperCase()}
-                        </div>
-                        <div style={{ overflow: 'hidden' }}>
-                            <div style={{ fontSize: '0.85rem', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {user?.email}
+                {!isSidebarCollapsed && (
+                    <div style={{ padding: '0 1.5rem 1rem', borderBottom: '1px solid var(--glass-border)', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                            <div style={{
+                                width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem'
+                            }}>
+                                {user?.email?.[0].toUpperCase()}
                             </div>
-                            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Cloud Synced</div>
+                            <div style={{ overflow: 'hidden' }}>
+                                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {user?.email}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Cloud Synced</div>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button onClick={handleSync} disabled={isSyncing} className="btn-icon" style={{ width: '100%', borderRadius: '4px', height: '32px', fontSize: '0.75rem', gap: '0.25rem' }}>
+                                <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} /> {isSyncing ? 'Đang bộ...' : 'Đồng bộ'}
+                            </button>
+                            <button onClick={handleLogout} className="btn-icon" style={{ borderRadius: '4px', height: '32px', color: 'var(--status-danger)' }}>
+                                <LogOut size={14} />
+                            </button>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button onClick={handleSync} disabled={isSyncing} className="btn-icon" style={{ width: '100%', borderRadius: '4px', height: '32px', fontSize: '0.75rem', gap: '0.25rem' }}>
-                            <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} /> {isSyncing ? 'Đang bộ...' : 'Đồng bộ'}
-                        </button>
-                        <button onClick={handleLogout} className="btn-icon" style={{ borderRadius: '4px', height: '32px', color: 'var(--status-danger)' }}>
-                            <LogOut size={14} />
-                        </button>
-                    </div>
-                </div>
+                )}
 
                 <nav className="nav-menu">
-                    <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} end>
+                    <NavLink to="/" title="Dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} end>
                         <Home size={20} />
-                        <span>Dashboard</span>
+                        {!isSidebarCollapsed && <span>Dashboard</span>}
                     </NavLink>
-                    <NavLink to="/transactions" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/transactions" title="Giao dịch" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <CreditCard size={20} />
-                        <span>Giao dịch</span>
+                        {!isSidebarCollapsed && <span>Giao dịch</span>}
                     </NavLink>
-                    <NavLink to="/wallets" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/wallets" title="Tài khoản/Ví" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Wallet size={20} />
-                        <span>Tài khoản/Ví</span>
+                        {!isSidebarCollapsed && <span>Tài khoản/Ví</span>}
                     </NavLink>
-                    <NavLink to="/budgets" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/budgets" title="Ngân sách" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <PieChart size={20} />
-                        <span>Ngân sách</span>
+                        {!isSidebarCollapsed && <span>Ngân sách</span>}
                     </NavLink>
-                    <NavLink to="/goals" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/goals" title="Mục tiêu" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <Target size={20} />
-                        <span>Mục tiêu</span>
+                        {!isSidebarCollapsed && <span>Mục tiêu</span>}
                     </NavLink>
-                    <NavLink to="/debts" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/debts" title="Quản lý Nợ" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <TrendingDown size={20} />
-                        <span>Quản lý Nợ</span>
+                        {!isSidebarCollapsed && <span>Quản lý Nợ</span>}
                     </NavLink>
-                    <NavLink to="/reports" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/reports" title="Báo cáo" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <FileText size={20} />
-                        <span>Báo cáo</span>
+                        {!isSidebarCollapsed && <span>Báo cáo</span>}
                     </NavLink>
                 </nav>
 
                 <div className="sidebar-footer">
-                    <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <NavLink to="/settings" title="Cài đặt" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                         <SettingsIcon size={20} />
-                        <span>Cài đặt</span>
+                        {!isSidebarCollapsed && <span>Cài đặt</span>}
                     </NavLink>
                 </div>
             </aside>
