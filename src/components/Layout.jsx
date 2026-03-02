@@ -11,7 +11,9 @@ import {
     RefreshCw,
     ChevronLeft,
     ChevronRight,
-    Menu
+    Menu,
+    LogOut,
+    TrendingDown
 } from 'lucide-react';
 import './Layout.css';
 import { supabase } from '../supabaseClient';
