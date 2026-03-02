@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search } from 'lucide-react';
 import DynamicIcon from '../components/DynamicIcon';
+import IconPicker from '../components/IconPicker';
 
 const Settings = () => {
     const categories = useLiveQuery(() => db.categories.toArray());
@@ -200,16 +201,33 @@ const Settings = () => {
                                     />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Biểu tượng (Tên)</label>
-                                    <input
-                                        type="text"
-                                        className="input-field"
-                                        placeholder="star"
-                                        value={formData.icon}
-                                        onChange={e => setFormData({ ...formData, icon: e.target.value })}
-                                    />
+                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Biểu tượng hiện tại</label>
+                                    <div style={{
+                                        height: '45px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.75rem',
+                                        padding: '0 1rem',
+                                        background: 'var(--bg-tertiary)',
+                                        border: '1px solid var(--glass-border)',
+                                        borderRadius: 'var(--border-radius-sm)',
+                                        color: formData.color
+                                    }}>
+                                        <DynamicIcon name={formData.icon} color={formData.color} size={24} />
+                                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{formData.icon}</span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Chọn Biểu tượng</label>
+                                <IconPicker
+                                    selectedIcon={formData.icon}
+                                    onSelect={(icon) => setFormData({ ...formData, icon })}
+                                    color={formData.color}
+                                />
+                            </div>
+
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                                 <button type="button" className="input-field" style={{ flex: 1, textAlign: 'center' }} onClick={() => setIsModalOpen(false)}>Hủy</button>
                                 <button type="submit" className="btn-primary" style={{ flex: 1, justifyContent: 'center' }}>Lưu</button>
