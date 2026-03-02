@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import * as LucideIcons from 'lucide-react';
 import DynamicIcon from './DynamicIcon';
 import { Search, X } from 'lucide-react';
 
