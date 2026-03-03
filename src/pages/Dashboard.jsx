@@ -46,7 +46,8 @@ const Dashboard = () => {
                         expenseThisMonth += Number(t.amount);
                         const wallet = wallets.find(w => w.id === t.walletId);
                         if (wallet) {
-                            expensesByWalletType[wallet.type] = (expensesByWalletType[wallet.type] || 0) + Number(t.amount);
+                            const normalizedType = wallet.type === 'cash' ? 'cash' : (wallet.type === 'bank' ? 'bank' : 'credit');
+                            expensesByWalletType[normalizedType] = (expensesByWalletType[normalizedType] || 0) + Number(t.amount);
                         }
                     }
                 }
@@ -61,7 +62,8 @@ const Dashboard = () => {
                 expenseThisMonth += Number(dp.amount);
                 const wallet = wallets.find(w => w.id === dp.walletId);
                 if (wallet) {
-                    expensesByWalletType[wallet.type] = (expensesByWalletType[wallet.type] || 0) + Number(dp.amount);
+                    const normalizedType = wallet.type === 'cash' ? 'cash' : (wallet.type === 'bank' ? 'bank' : 'credit');
+                    expensesByWalletType[normalizedType] = (expensesByWalletType[normalizedType] || 0) + Number(dp.amount);
                 }
             }
         });
@@ -72,7 +74,8 @@ const Dashboard = () => {
                 expenseThisMonth += Number(gd.amount);
                 const wallet = wallets.find(w => w.id === gd.walletId);
                 if (wallet) {
-                    expensesByWalletType[wallet.type] = (expensesByWalletType[wallet.type] || 0) + Number(gd.amount);
+                    const normalizedType = wallet.type === 'cash' ? 'cash' : (wallet.type === 'bank' ? 'bank' : 'credit');
+                    expensesByWalletType[normalizedType] = (expensesByWalletType[normalizedType] || 0) + Number(gd.amount);
                 }
             }
         });
